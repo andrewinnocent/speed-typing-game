@@ -1,26 +1,23 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+/**
+ * Challenge: build the basic structure of our game
+ * 
+ * 1. <h1> title at the top
+ * 2. <textarea> for the box to type in 
+ *      (tip: React normalizes <textarea /> to be more like <input />, 
+ *      so it can be used as a self-closing element and uses the `value` property
+ *      to set its contents)
+ * 3. <h4> ti display the amount of time remaining
+ * 4. <button> to start the game
+ * 5. Another <h1> to display the word count
+ */
+import React from "react"
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+function App() {    
+    return (
+        <div>
+           <h1>Hello!</h1>
+        </div>
+    )
 }
 
-export default App;
+export default App
