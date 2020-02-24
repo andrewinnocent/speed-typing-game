@@ -1,22 +1,21 @@
 /**
- * Challenge: build the basic structure of our game
- * 
- * 1. <h1> title at the top
- * 2. <textarea> for the box to type in 
- *      (tip: React normalizes <textarea /> to be more like <input />, 
- *      so it can be used as a self-closing element and uses the `value` property
- *      to set its contents)
- * 3. <h4> to display the amount of time remaining
- * 4. <button> to start the game
- * 5. Another <h1> to display the word count
+ * Challenge: Using hooks, track the state of the text in the textarea on every keystroke
+ * To verify it's working, you could just console.log the state on every change
  */
-import React from "react"
+import React, {useState} from "react"
 
-function App() {    
+function App() {   
+		const [words, setWords] = useState()
+
+		function updateWords(e) {
+			const {value} = e.target
+			setWords(value)
+		}
+
     return (
         <div>
           <h1>Speed Typing Game!</h1>
-          <textarea value=""/>
+          <textarea value={words} onChange={updateWords}/>
           <h4>Time remaining: [seconds]</h4>
           <button>Start</button>
           <h1>Word count: [x]</h1>
