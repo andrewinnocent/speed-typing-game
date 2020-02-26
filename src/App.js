@@ -11,8 +11,10 @@
 import React, {useState, useEffect} from "react"
 
 function App() {   
+		const STARTING_TIME = 2
 		const [words, setWords] = useState("")
-		const [timeRemaining, setTimeRemaining] = useState(2)
+		const [wordCount, setWordCount] = useState(0)
+		const [timeRemaining, setTimeRemaining] = useState(STARTING_TIME)
 		const [startedTimer, setStartedTimer] = useState(false)
 
 		function updateWords(e) {
@@ -21,39 +23,44 @@ function App() {
 		}
 
 		useEffect(() => {
-			let timeoutId
-
+	
 			if (timeRemaining > 0 && startedTimer) {
-				timeoutId = setTimeout(() => {
-				setTimeRemaining(prevTimeRemaining => prevTimeRemaining - 1)
-			}, 1000)} else if (!timeRemaining) {
-				console.log('time is up!')
-				setStartedTimer(false)
+				const timeoutId = setTimeout(() => {
+					setTimeRemaining(prevTimeRemaining => prevTimeRemaining - 1)
+				}, 1000)
+				return () => clearTimeout(timeoutId)
+			} else if (!timeRemaining) {
+				endGame()
 			}
 
-			return () => clearTimeout(timeoutId)
-			
 		}, [startedTimer, timeRemaining]) 
 
 
-		function getWordsCount(str) {
+		function getWordCount(str) {
 			return str.split(" ")
             .filter(n => n !== "")
             .length;
 		}
 
-		function beginTimer() {
+		function startGame() {
 			setStartedTimer(true)
-			if (!timeRemaining) setTimeRemaining(2)
+			setTimeRemaining(STARTING_TIME)
+			setWordCount(0)
+			setWords("")
 		}
-		
+
+		function endGame() {
+			setWordCount(getWordCount(words))
+			setStartedTimer(false)
+		}
+
     return (
         <div>
           <h1>Speed Typing Game!</h1>
           <textarea value={words} onChange={updateWords}/>
           <h4>Time remaining: {timeRemaining}</h4>
-          <button onClick={() => beginTimer()}>Start</button>
-          <h1>Word count: {!timeRemaining ? getWordsCount(words) : 0}</h1>
+          <button onClick={() => startGame()}>Start</button>
+          <h1>Word count: {wordCount}</h1>
         </div>
     )
 }
