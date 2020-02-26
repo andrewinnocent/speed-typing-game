@@ -1,14 +1,11 @@
 /**
  * Challenge:
  * 
- * When the timer reaches 0, count the number of words the user typed in 
- * and display it in the "Word count" section
- * 
- * After the game ends, make it so the user can click the Start button again
- * to play a second time
+ * Make the input box focus (DOM elements have a method called .focus()) 
+ * immediately when the game starts
  */
 
-import React, {useState, useEffect} from "react"
+import React, {useState, useEffect, useRef} from "react"
 
 function App() {   
 		const STARTING_TIME = 2
@@ -16,6 +13,7 @@ function App() {
 		const [wordCount, setWordCount] = useState(0)
 		const [timeRemaining, setTimeRemaining] = useState(STARTING_TIME)
 		const [startedTimer, setStartedTimer] = useState(false)
+		let textBoxRef = useRef(null) // initialize with a null value
 
 		function updateWords(e) {
 			const {value} = e.target
@@ -47,6 +45,10 @@ function App() {
 			setTimeRemaining(STARTING_TIME)
 			setWordCount(0)
 			setWords("")
+			// Because setting state is asychronous, by the time .focus() is called on the textarea, disable hasn't switched yet to false.
+			// So, force the switch here, which is synchronous (happens immediately) and allows the focus() to work on the element.
+			textBoxRef.current.disabled = false
+			textBoxRef.current.focus()
 		}
 
 		function endGame() {
@@ -57,9 +59,19 @@ function App() {
     return (
         <div>
           <h1>Speed Typing Game!</h1>
-          <textarea value={words} onChange={updateWords}/>
+          <textarea
+						ref={textBoxRef}
+						value={words}
+						onChange={updateWords}
+						disabled={!startedTimer}
+						/>
           <h4>Time remaining: {timeRemaining}</h4>
-          <button onClick={() => startGame()}>Start</button>
+					<button
+						onClick={() => startGame()}
+						disabled={startedTimer}
+					>
+						Start
+					</button>
           <h1>Word count: {wordCount}</h1>
         </div>
     )
