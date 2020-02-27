@@ -1,60 +1,18 @@
 /**
  * Challenge:
  * 
- * Make the input box focus (DOM elements have a method called .focus()) 
- * immediately when the game starts
+ * Move the "business logic" into a custom hook, which will provide
+ * any parts of state and any functions to this component to use.
+ * 
+ * You can easily tell which parts the component needs by looking at 
+ * the variables being used inside the `return`ed markup below.
  */
 
-import React, {useState, useEffect, useRef} from "react"
+import React from "react"
+import useGameData from "./useGameData"
 
 function App() {   
-		const STARTING_TIME = 2
-		const [words, setWords] = useState("")
-		const [wordCount, setWordCount] = useState(0)
-		const [timeRemaining, setTimeRemaining] = useState(STARTING_TIME)
-		const [startedTimer, setStartedTimer] = useState(false)
-		let textBoxRef = useRef(null) // initialize with a null value
-
-		function updateWords(e) {
-			const {value} = e.target
-			setWords(value)
-		}
-
-		useEffect(() => {
-	
-			if (timeRemaining > 0 && startedTimer) {
-				const timeoutId = setTimeout(() => {
-					setTimeRemaining(prevTimeRemaining => prevTimeRemaining - 1)
-				}, 1000)
-				return () => clearTimeout(timeoutId)
-			} else if (!timeRemaining) {
-				endGame()
-			}
-
-		}, [startedTimer, timeRemaining]) 
-
-
-		function getWordCount(str) {
-			return str.split(" ")
-            .filter(n => n !== "")
-            .length;
-		}
-
-		function startGame() {
-			setStartedTimer(true)
-			setTimeRemaining(STARTING_TIME)
-			setWordCount(0)
-			setWords("")
-			// Because setting state is asychronous, by the time .focus() is called on the textarea, disable hasn't switched yet to false.
-			// So, force the switch here, which is synchronous (happens immediately) and allows the focus() to work on the element.
-			textBoxRef.current.disabled = false
-			textBoxRef.current.focus()
-		}
-
-		function endGame() {
-			setWordCount(getWordCount(words))
-			setStartedTimer(false)
-		}
+		const {words, wordCount, updateWords, textBoxRef, timeRemaining, startedTimer, startGame, endGame} = useGameData()
 
     return (
         <div>
